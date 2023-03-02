@@ -1,5 +1,6 @@
 package ie.setu
 
+import mu.KotlinLogging
 import utils.ScannerInput
 import java.lang.System.exit
 
@@ -34,25 +35,27 @@ fun runMenu(){
 }
 
 fun createNote(){
-    println("Create note selected")
+    logger.info { "createNote() function invoked" }
 }
 
 fun listNotes(){
-    println("List notes selected")
+    logger.info { "listNotes() function invoked" }
 }
 
 fun updateNote(){
-    println("Update note selected")
+    logger.info { "updateNote() function invoked" }
 }
 
 fun deleteNote(){
-    println("Delete note selected")
+    logger.info { "deleteNote() function invoked" }
 }
 
 fun exitApp(){
     println("Closing app")
     exit(0)
 }
+
+private val logger = KotlinLogging.logger {}
 
 fun main(args: Array<String>){
     runMenu()
