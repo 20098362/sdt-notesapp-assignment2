@@ -1,12 +1,10 @@
 package ie.setu
 
+import utils.ScannerInput
 import java.lang.System.exit
-import java.util.*
-
-val scanner = Scanner(System.`in`)
 
 fun mainMenu(): Int{
-    val printout = """
+    return ScannerInput.readNextInt("""
         >--------------------
         >Notes Keeper App
         >--------------------
@@ -19,9 +17,7 @@ fun mainMenu(): Int{
         >--------------------
         >   0)Exit
         >--------------------
-        """.trimMargin(">")
-    println(printout)
-    return scanner.nextInt()
+        >=====>""".trimMargin(">"))
 }
 
 fun runMenu(){
