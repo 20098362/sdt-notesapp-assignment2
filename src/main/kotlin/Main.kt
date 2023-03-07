@@ -1,8 +1,14 @@
 package ie.setu
 
+import ie.setu.controllers.NoteAPI
+import ie.setu.models.Note
 import mu.KotlinLogging
 import utils.ScannerInput
+import utils.ScannerInput.readNextInt
+import utils.ScannerInput.readNextLine
 import java.lang.System.exit
+
+private val noteAPI = NoteAPI()
 
 fun mainMenu(): Int{
     return ScannerInput.readNextInt("""
@@ -36,10 +42,23 @@ fun runMenu(){
 
 fun createNote(){
     logger.info { "createNote() function invoked" }
+
+    val noteTitle = readNextLine("Enter a title for the note: ")
+    val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
+    val noteCategory = readNextLine("Enter a category for the note: ")
+    val isAdded = noteAPI.create(Note(noteTitle, notePriority, noteCategory, false))
+
+    if (isAdded) {
+        println("Created Successfully")
+    } else {
+        println("Create Failed")
+    }
 }
 
 fun listNotes(){
     logger.info { "listNotes() function invoked" }
+
+    println(noteAPI.listAllNotes())
 }
 
 fun updateNote(){
