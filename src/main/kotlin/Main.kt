@@ -24,6 +24,7 @@ fun mainMenu(): Int{
         >--------------------
         >   5)List all active notes
         >   6)List all archived notes
+        >   7)List by priority number
         >--------------------
         >   0)Exit
         >--------------------
@@ -39,6 +40,7 @@ fun runMenu(){
             4 -> deleteNote()
             5 -> listActive()
             6 -> listArchive()
+            7 -> listByPriority()
             0 -> exitApp()
             else -> println("Invalid option entered: $option")
         }
@@ -74,6 +76,11 @@ fun listActive(){
 fun listArchive(){
     println("Number of notes currently archived: ${noteAPI.numberOfArchivedNotes()}")
     println(noteAPI.listArchivedNotes())
+}
+
+fun listByPriority(){
+    val prioNum = ScannerInput.readNextInt("Please enter the note priority you wish to search by: ")
+    println(noteAPI.listNotesBySelectedPriority(prioNum))
 }
 
 fun updateNote(){
