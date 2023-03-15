@@ -7,6 +7,7 @@ import utils.ScannerInput
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
 import java.lang.System.exit
+import kotlin.system.exitProcess
 
 private val noteAPI = NoteAPI()
 
@@ -79,8 +80,8 @@ fun listArchive(){
 }
 
 fun listByPriority(){
-    val prioNum = ScannerInput.readNextInt("Please enter the note priority you wish to search by: ")
-    println(noteAPI.listNotesBySelectedPriority(prioNum))
+    val priorityNum = ScannerInput.readNextInt("Please enter the note priority you wish to search by: ")
+    println(noteAPI.listNotesBySelectedPriority(priorityNum))
 }
 
 fun updateNote(){
@@ -88,12 +89,25 @@ fun updateNote(){
 }
 
 fun deleteNote(){
-    logger.info { "deleteNote() function invoked" }
+    //logger.info { "deleteNotes() function invoked" }
+    listNotes()
+    if (noteAPI.numberOfNotes() > 0) {
+        //only ask the user to choose the note to delete if notes exist
+        val indexToDelete = readNextInt("Enter the index of the note to delete: ")
+        //pass the index of the note to NoteAPI for deleting and check for success.
+        val noteToDelete = noteAPI.deleteNote(indexToDelete)
+        if (noteToDelete != null) {
+            println("Delete Successful! Deleted note: ${noteToDelete.noteTitle}")
+        } else {
+            println("Delete NOT Successful")
+        }
+    }
 }
+
 
 fun exitApp(){
     println("Closing app")
-    exit(0)
+    exitProcess(0)
 }
 
 private val logger = KotlinLogging.logger {}
