@@ -2,6 +2,7 @@ package ie.setu
 
 import ie.setu.controllers.NoteAPI
 import ie.setu.models.Note
+import ie.setu.persistence.JSONSerializer
 import ie.setu.persistence.XMLSerializer
 import mu.KotlinLogging
 import utils.ScannerInput
@@ -11,7 +12,9 @@ import java.io.File
 import java.lang.System.exit
 import kotlin.system.exitProcess
 
-private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
+//private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
+private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
+
 
 
 fun mainMenu(): Int{
