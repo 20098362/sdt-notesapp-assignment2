@@ -24,5 +24,3 @@ Current features:
 **VCS: Github**
 
 **Author: Troy Barrett**
-
-**Date: 15/03/2023**

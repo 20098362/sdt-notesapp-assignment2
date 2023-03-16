@@ -2,14 +2,17 @@ package ie.setu
 
 import ie.setu.controllers.NoteAPI
 import ie.setu.models.Note
+import ie.setu.persistence.XMLSerializer
 import mu.KotlinLogging
 import utils.ScannerInput
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
+import java.io.File
 import java.lang.System.exit
 import kotlin.system.exitProcess
 
-private val noteAPI = NoteAPI()
+private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
+
 
 fun mainMenu(): Int{
     return ScannerInput.readNextInt("""
@@ -27,6 +30,9 @@ fun mainMenu(): Int{
         >   6)List all archived notes
         >   7)List by priority number
         >--------------------
+        >   20)Save to file
+        >   21)Load from file
+        >--------------------
         >   0)Exit
         >--------------------
         >=====>""".trimMargin(">"))
@@ -42,6 +48,8 @@ fun runMenu(){
             5 -> listActive()
             6 -> listArchive()
             7 -> listByPriority()
+            20 -> save()
+            21 -> load()
             0 -> exitApp()
             else -> println("Invalid option entered: $option")
         }
@@ -129,6 +137,23 @@ fun exitApp(){
     println("Closing app")
     exitProcess(0)
 }
+
+fun save() {
+    try {
+        noteAPI.store()
+    } catch (e: Exception) {
+        System.err.println("Error writing to file: $e")
+    }
+}
+
+fun load() {
+    try {
+        noteAPI.load()
+    } catch (e: Exception) {
+        System.err.println("Error reading from file: $e")
+    }
+}
+
 
 private val logger = KotlinLogging.logger {}
 

@@ -1,0 +1,10 @@
+<object-stream>
+  <list>
+    <ie.setu.models.Note>
+      <noteTitle>New note</noteTitle>
+      <notePriority>2</notePriority>
+      <noteCategory>Testing</noteCategory>
+      <isNoteArchived>false</isNoteArchived>
+    </ie.setu.models.Note>
+  </list>
+</object-stream>
