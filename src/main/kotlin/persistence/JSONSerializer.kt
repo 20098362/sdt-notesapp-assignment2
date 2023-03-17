@@ -17,7 +17,6 @@ class JSONSerializer(private val file: File) : Serializer {
         inputStream.close()
         return obj
     }
-
     @Throws(Exception::class)
     override fun write(obj: Any?) {
         val xStream = XStream(JettisonMappedXmlDriver())
