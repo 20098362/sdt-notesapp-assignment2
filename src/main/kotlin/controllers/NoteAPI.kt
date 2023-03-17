@@ -13,12 +13,34 @@ class NoteAPI(serializerType: Serializer) {
         return notes.add(note)
     }
 
-    fun listAllNotes(): String{
-        return if(notes.isEmpty()){
+    fun deleteNote(indexToDelete: Int): Note? {
+        return if (isValidListIndex(indexToDelete, notes)) {
+            notes.removeAt(indexToDelete)
+        } else null
+    }
+
+    fun updateNote(indexToUpdate: Int, note: Note?): Boolean {
+        //find the note object by the index number
+        val foundNote = findNote(indexToUpdate)
+
+        //if the note exists, use the note details passed as parameters to update the found note in the ArrayList.
+        if ((foundNote != null) && (note != null)) {
+            foundNote.noteTitle = note.noteTitle
+            foundNote.notePriority = note.notePriority
+            foundNote.noteCategory = note.noteCategory
+            return true
+        }
+
+        //if the note was not found, return false, indicating that the update was not successful
+        return false
+    }
+
+    fun listAllNotes(): String {
+        return if (notes.isEmpty()) {
             "No notes stored"
         } else {
             var listOfNotes = ""
-            for(i in notes.indices){
+            for (i in notes.indices) {
                 listOfNotes += "${i}: ${notes[i]} \n"
             }
             listOfNotes
@@ -73,32 +95,13 @@ class NoteAPI(serializerType: Serializer) {
         }
     }
 
-    fun numberOfArchivedNotes(): Int {
-        //return notes.stream().filter { obj: Note -> obj.isNoteArchived }.count().toInt()
-        var counter = 0
-        for (note in notes) {
-            if (note.isNoteArchived) {
-                counter++
-            }
-        }
-        return counter
-    }
+    fun numberOfArchivedNotes(): Int = notes.count { note: Note -> note.isNoteArchived }
 
-    fun numberOfActiveNotes(): Int {
-        //return notes.stream().filter { p: Note -> !p.isNoteArchived }.count().toInt()
-        var counter = 0
-        for (note in notes) {
-            if (!note.isNoteArchived) {
-                counter++
-            }
-        }
-        return counter
-    }
+    fun numberOfNotesByPriority(priority: Int): Int = notes.count { p: Note -> p.notePriority == priority }
 
+    fun numberOfNotes(): Int = notes.size
 
-    fun numberOfNotes(): Int {
-        return notes.size
-    }
+    fun numberOfActiveNotes(): Int = notes.count{note: Note -> !note.isNoteArchived}
 
     fun findNote(index: Int): Note? {
         return if (isValidListIndex(index, notes)) {
@@ -106,59 +109,12 @@ class NoteAPI(serializerType: Serializer) {
         } else null
     }
 
-    fun numberOfNotesByPriority(priority: Int): Int {
-        //return notes.stream().filter { p: Note -> p.notePriority == priority }.count().toInt()
-        var counter = 0
-        for (note in notes) {
-            if (note.notePriority == priority) {
-                counter++
-            }
-        }
-        return counter
-    }
-
-    //utility method to determine if an index is valid in a list.
     fun isValidListIndex(index: Int, list: List<Any>): Boolean {
         return (index >= 0 && index < list.size)
     }
 
-    fun isValidIndex(index: Int) :Boolean{
+    fun isValidIndex(index: Int): Boolean {
         return isValidListIndex(index, notes);
-    }
-
-
-    fun deleteNote(indexToDelete: Int): Note? {
-        return if (isValidListIndex(indexToDelete, notes)) {
-            notes.removeAt(indexToDelete)
-        } else null
-    }
-
-    fun updateNote(indexToUpdate: Int, note: Note?): Boolean {
-        //find the note object by the index number
-        val foundNote = findNote(indexToUpdate)
-
-        //if the note exists, use the note details passed as parameters to update the found note in the ArrayList.
-        if ((foundNote != null) && (note != null)) {
-            foundNote.noteTitle = note.noteTitle
-            foundNote.notePriority = note.notePriority
-            foundNote.noteCategory = note.noteCategory
-            return true
-        }
-
-        //if the note was not found, return false, indicating that the update was not successful
-        return false
-    }
-
-
-
-    @Throws(Exception::class)
-    fun load() {
-        notes = serializer.read() as ArrayList<Note>
-    }
-
-    @Throws(Exception::class)
-    fun store() {
-        serializer.write(notes)
     }
 
     fun archiveNote(indexToArchive: Int): Boolean {
@@ -172,11 +128,23 @@ class NoteAPI(serializerType: Serializer) {
         return false
     }
 
-    private fun formatListString(notesToFormat : List<Note>) : String =
+    private fun formatListString(notesToFormat: List<Note>): String =
         notesToFormat
-            .joinToString (separator = "\n") { note ->
-                notes.indexOf(note).toString() + ": " + note.toString() }
+            .joinToString(separator = "\n") { note ->
+                notes.indexOf(note).toString() + ": " + note.toString()
+            }
 
-    fun searchByTitle(searchString : String) =
-        formatListString(notes.filter { note -> note.noteTitle.contains(searchString, ignoreCase = true)})
+    fun searchByTitle(searchString: String) =
+        formatListString(notes.filter { note -> note.noteTitle.contains(searchString, ignoreCase = true) })
+
+
+    @Throws(Exception::class)
+    fun load() {
+        notes = serializer.read() as ArrayList<Note>
+    }
+
+    @Throws(Exception::class)
+    fun store() {
+        serializer.write(notes)
+    }
 }
