@@ -28,10 +28,11 @@ fun mainMenu(): Int{
         >   2)List all notes
         >   3)Update existing note
         >   4)Delete note
+        >   5)Archive note
         >--------------------
-        >   5)List all active notes
-        >   6)List all archived notes
-        >   7)List by priority number
+        >   6)List all active notes
+        >   7)List all archived notes
+        >   8)List by priority number
         >--------------------
         >   20)Save to file
         >   21)Load from file
@@ -48,9 +49,10 @@ fun runMenu(){
             2 -> listNotes()
             3 -> updateNote()
             4 -> deleteNote()
-            5 -> listActive()
-            6 -> listArchive()
-            7 -> listByPriority()
+            5 -> archiveNote()
+            6 -> listActiveNotes()
+            7 -> listArchive()
+            8 -> listByPriority()
             20 -> save()
             21 -> load()
             0 -> exitApp()
@@ -80,13 +82,28 @@ fun listNotes(){
     println(noteAPI.listAllNotes())
 }
 
-fun listActive(){
-    println("Number of notes currently active: ${noteAPI.numberOfActiveNotes()}")
+
+fun listActiveNotes() {
     println(noteAPI.listActiveNotes())
 }
 
+fun archiveNote() {
+    listActiveNotes()
+    if (noteAPI.numberOfActiveNotes() > 0) {
+        //only ask the user to choose the note to archive if active notes exist
+        val indexToArchive = readNextInt("Enter the index of the note to archive: ")
+        //pass the index of the note to NoteAPI for archiving and check for success.
+        if (noteAPI.archiveNote(indexToArchive)) {
+            println("Archive Successful!")
+        } else {
+            println("Archive NOT Successful")
+        }
+    }
+}
+
+
+
 fun listArchive(){
-    println("Number of notes currently archived: ${noteAPI.numberOfArchivedNotes()}")
     println(noteAPI.listArchivedNotes())
 }
 
