@@ -172,6 +172,7 @@ class NoteAPITest {
         }
     }
 
+
     @Nested
     inner class DeleteNotes {
 
@@ -352,7 +353,6 @@ class NoteAPITest {
             assertEquals(0, emptyNotes!!.numberOfNotesByPriority(1))
         }
     }
-
 
 
 }
