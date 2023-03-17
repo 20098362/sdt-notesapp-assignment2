@@ -12,54 +12,51 @@ import java.io.File
 import java.lang.System.exit
 import kotlin.system.exitProcess
 
-//private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
-private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
+private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
+//private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
 
 
 
-fun mainMenu(): Int{
-    return ScannerInput.readNextInt("""
-        >--------------------
-        >Notes Keeper App
-        >--------------------
-        >Note Menu
-        >
-        >   1)Create new note
-        >   2)List all notes
-        >   3)Update existing note
-        >   4)Delete note
-        >   5)Archive note
-        >--------------------
-        >   6)List all active notes
-        >   7)List all archived notes
-        >   8)List by priority number
-        >--------------------
-        >   20)Save to file
-        >   21)Load from file
-        >--------------------
-        >   0)Exit
-        >--------------------
-        >=====>""".trimMargin(">"))
+fun mainMenu() : Int {
+    return ScannerInput.readNextInt(""" 
+         > -------------------------------------
+         > |          NOTE KEEPER APP          |
+         > -------------------------------------
+         > | NOTE MENU                         |
+         > |   1) Add a note                   |
+         > |   2) List notes                   |
+         > |   3) Update a note                |
+         > |   4) Delete a note                |
+         > |   5) Archive a note               |
+         > |   6) Search note(by description)  |
+         > -------------------------------------
+         > |   20) Save notes                  |
+         > |   21) Load notes                  |
+         > -------------------------------------
+         > |   0) Exit                         |
+         > -------------------------------------
+         > ==>> """.trimMargin(">"))
 }
 
-fun runMenu(){
-    do{
-        when(val option = mainMenu()){
-            1 -> createNote()
-            2 -> listNotes()
-            3 -> updateNote()
-            4 -> deleteNote()
+fun runMenu() {
+    do {
+        val option = mainMenu()
+        when (option) {
+            1  -> createNote()
+            2  -> listNotes()
+            3  -> updateNote()
+            4  -> deleteNote()
             5 -> archiveNote()
-            6 -> listActiveNotes()
-            7 -> listArchive()
-            8 -> listByPriority()
-            20 -> save()
-            21 -> load()
-            0 -> exitApp()
-            else -> println("Invalid option entered: $option")
+            6 -> searchNotes()
+            20  -> save()
+            21  -> load()
+            0  -> exitApp()
+            else -> println("Invalid option entered: ${option}")
         }
     } while (true)
 }
+
+
 
 fun createNote(){
     logger.info { "createNote() function invoked" }
@@ -76,11 +73,45 @@ fun createNote(){
     }
 }
 
-fun listNotes(){
-    logger.info { "listNotes() function invoked" }
+fun listNotes() {
+    if (noteAPI.numberOfNotes() > 0) {
+        val option = readNextInt(
+            """
+                  > --------------------------------
+                  > |   1) View ALL notes          |
+                  > |   2) View ACTIVE notes       |
+                  > |   3) View ARCHIVED notes     |
+                  > --------------------------------
+         > ==>> """.trimMargin(">"))
 
+        when (option) {
+            1 -> listAllNotes();
+            2 -> listActiveNotes();
+            3 -> listArchivedNotes();
+            else -> println("Invalid option entered: " + option);
+        }
+    } else {
+        println("Option Invalid - No notes stored");
+    }
+}
+
+fun searchNotes() {
+    val searchTitle = readNextLine("Enter the description to search by: ")
+    val searchResults = noteAPI.searchByTitle(searchTitle)
+    if (searchResults.isEmpty()) {
+        println("No notes found")
+    } else {
+        println(searchResults)
+    }
+}
+fun listAllNotes() {
     println(noteAPI.listAllNotes())
 }
+
+fun listArchivedNotes() {
+    println(noteAPI.listArchivedNotes())
+}
+
 
 
 fun listActiveNotes() {
