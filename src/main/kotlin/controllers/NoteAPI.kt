@@ -172,4 +172,11 @@ class NoteAPI(serializerType: Serializer) {
         return false
     }
 
+    private fun formatListString(notesToFormat : List<Note>) : String =
+        notesToFormat
+            .joinToString (separator = "\n") { note ->
+                notes.indexOf(note).toString() + ": " + note.toString() }
+
+    fun searchByTitle(searchString : String) =
+        formatListString(notes.filter { note -> note.noteTitle.contains(searchString, ignoreCase = true)})
 }

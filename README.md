@@ -13,7 +13,7 @@ Current features:
 
 ### **Versions**
 
-**App Version: V2.0**
+**App Version: V3.0**
 
 **IntelliJ IDEA Community 2022.2.2**
 
