@@ -37,7 +37,6 @@ class NoteAPI(serializerType: Serializer) {
         if  (notes.isEmpty()) "No notes stored"
         else formatListString(notes)
 
-
     fun listActiveNotes(): String =
         if  (numberOfActiveNotes() == 0)  "No active notes stored"
         else formatListString(notes.filter { note -> !note.isNoteArchived})
@@ -103,18 +102,36 @@ class NoteAPI(serializerType: Serializer) {
         return false
     }
 
-
     private fun formatListString(notesToFormat : List<Note>) : String =
         notesToFormat
             .joinToString (separator = "\n") { note ->
                 notes.indexOf(note).toString() + ": " + note.toString() }
 
-
     fun searchByTitle (searchString : String) =
         formatListString(
             notes.filter { note -> note.noteTitle.contains(searchString, ignoreCase = true) })
 
+    fun listAllTodo(): String =
+        if(numberOfNotes() == 0) "No notes stored"
+        else formatListString(notes.filter {note -> note.isNoteTodo})
 
+    fun listAllCompleted(): String =
+        if(numberOfNotes() == 0) "No notes stored"
+        else formatListString(notes.filter {note -> note.isNoteCompleted})
+
+    fun listAllInProgress(): String =
+        if(numberOfActiveNotes() == 0) "No active notes of that kind"
+        else formatListString(notes.filter {note -> note.isNoteTodo && !note.isNoteCompleted})
+
+    fun searchByCategory (searchString: String) =
+        formatListString(
+            notes.filter {note -> note.noteCategory.contains(searchString, ignoreCase = true)})
+
+    fun numberOfTodo(): Int = notes.count{note -> note.isNoteTodo}
+
+    fun numberOfCompleted(): Int = notes.count{note -> note.isNoteCompleted}
+
+    fun numberOfInProgress(): Int = notes.count{note -> !note.isNoteCompleted && note.isNoteTodo}
 
     @Throws(Exception::class)
     fun load() {

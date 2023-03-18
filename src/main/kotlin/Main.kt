@@ -15,29 +15,36 @@ import kotlin.system.exitProcess
 //private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
 private val noteAPI = NoteAPI(YAMLSerializer(File("notes.yaml")))
 
-
+const val ansiReset = "\u001B[0m"
+const val ansiRed = "\u001B[31m"
+const val ansiGreen = "\u001B[32m"
+const val ansiYellow = "\u001B[33m"
+const val ansiBlue = "\u001B[34m"
+const val ansiCyan = "\u001B[36m"
 
 fun mainMenu() : Int {
     return readNextInt(""" 
-         > -------------------------------------
-         > |          NOTE KEEPER APP          |
-         > -------------------------------------
-         > | NOTE MENU                         |
-         > |   1) Add a note                   |
-         > |   2) List notes                   |
-         > |   3) Update a note                |
-         > |   4) Delete a note                |
-         > |   5) Archive a note               |
-         > |   6) Search note(by title)        |
-         > |   7) Set note as Todo             |
-         > |   8) Set note as complete         |
-         > -------------------------------------
-         > |   20) Save notes                  |
-         > |   21) Load notes                  |
-         > -------------------------------------
-         > |   0) Exit                         |
-         > -------------------------------------
-         > ==>> """.trimMargin(">"))
+         > $ansiCyan--------------------------------------------$ansiReset
+         > |          $ansiRed NOTE KEEPER APP $ansiReset               |
+         > | $ansiRed No. of notes in system: ${noteAPI.numberOfNotes()}$ansiReset               |
+         > $ansiCyan--------------------------------------------$ansiReset
+         > | $ansiRed NOTE MENU $ansiReset                              |
+         > |  $ansiBlue 1) Add a note $ansiReset                         |
+         > |  $ansiBlue 2) List notes $ansiReset                         |
+         > |  $ansiBlue 3) Update a note$ansiReset                       |
+         > |  $ansiBlue 4) Delete a note $ansiReset                      |
+         > |  $ansiBlue 5) Archive a note$ansiReset                      |
+         > |  $ansiBlue 6) Search note(by title) $ansiReset              |
+         > |  $ansiBlue 7) Set note as Todo $ansiReset                   |
+         > |  $ansiBlue 8) Set note as complete$ansiReset                |
+         > |  $ansiBlue 9) Search note(by category) $ansiReset           |
+         > $ansiCyan--------------------------------------------$ansiReset
+         > |  $ansiBlue 20) Save notes$ansiReset                         |
+         > |  $ansiBlue 21) Load notes$ansiReset                         |
+         > $ansiCyan--------------------------------------------$ansiReset
+         > |  $ansiYellow 0) Exit $ansiReset                               |
+         > $ansiCyan--------------------------------------------$ansiReset
+         > $ansiGreen==>> """.trimMargin(">"))
 }
 
 fun runMenu() {
@@ -52,6 +59,7 @@ fun runMenu() {
             6 -> searchNotes()
             7 -> todoNote()
             8 -> completeNote()
+            9 -> searchByCategory()
             20  -> save()
             21  -> load()
             0  -> exitApp()
@@ -77,19 +85,32 @@ fun listNotes() {
     if (noteAPI.numberOfNotes() > 0) {
         val option = readNextInt(
             """
-                  > --------------------------------
-                  > |   1) View ALL notes          |
-                  > |   2) View ACTIVE notes       |
-                  > |   3) View ARCHIVED notes     |
-                  > |   4) View note by priority   |
-                  > --------------------------------
-         > ==>> """.trimMargin(">"))
+                  > $ansiCyan--------------------------------------------$ansiReset
+                  > |$ansiRed No. of notes: ${noteAPI.numberOfNotes()} $ansiReset                         |
+                  > |$ansiRed No. of active notes: ${noteAPI.numberOfActiveNotes()} $ansiReset                  |
+                  > |$ansiRed No. of archived notes: ${noteAPI.numberOfArchivedNotes()} $ansiReset                |
+                  > |$ansiRed No. of todo notes: ${noteAPI.numberOfTodo()} $ansiReset                    |
+                  > |$ansiRed No. of completed notes: ${noteAPI.numberOfCompleted()} $ansiReset               |
+                  > |$ansiRed No. of notes in progress: ${noteAPI.numberOfInProgress()} $ansiReset             |
+                  > $ansiCyan--------------------------------------------$ansiReset
+                  > |$ansiBlue   1) View ALL notes   $ansiReset                   |
+                  > |$ansiBlue   2) View ACTIVE notes  $ansiReset                 |
+                  > |$ansiBlue   3) View ARCHIVED notes   $ansiReset              |
+                  > |$ansiBlue   4) View note by priority  $ansiReset             |
+                  > |$ansiBlue   5) View all todo notes    $ansiReset             |
+                  > |$ansiBlue   6) View all completed notes  $ansiReset          |
+                  > |$ansiBlue   7) View all in progress       $ansiReset         |
+                  > $ansiCyan--------------------------------------------$ansiReset
+         >$ansiGreen ==>> """.trimMargin(">"))
 
         when (option) {
             1 -> listAllNotes()
             2 -> listActiveNotes()
             3 -> listArchivedNotes()
             4 -> listByPriority()
+            5 -> allTodo()
+            6 -> allCompleted()
+            7 -> allInProgress()
             else -> println("Invalid option entered: $option")
         }
     } else {
@@ -100,18 +121,15 @@ fun listNotes() {
 fun searchNotes() {
     val searchTitle = readNextLine("Enter the note title to search by: ")
     val searchResults = noteAPI.searchByTitle(searchTitle)
-    if (searchResults.isEmpty()) {
-        println("No notes found")
-    } else {
-        println(searchResults)
-    }
+    if (searchResults.isEmpty()) println("No notes found")
+    else println(searchResults)
 }
+
 fun listAllNotes() = println(noteAPI.listAllNotes())
 
 fun listArchivedNotes() = println(noteAPI.listArchivedNotes())
 
 fun listActiveNotes() = println(noteAPI.listActiveNotes())
-
 
 fun archiveNote() {
     listActiveNotes()
@@ -146,6 +164,19 @@ fun listByPriority(){
     val priorityNum = readNextInt("Please enter the note priority you wish to search by: ")
     println(noteAPI.listNotesBySelectedPriority(priorityNum))
 }
+
+fun searchByCategory(){
+    val searchCategory = readNextLine("Enter the note category you wish to search by: ")
+    val categoryResults = noteAPI.searchByCategory(searchCategory)
+    if(categoryResults.isEmpty()) println("No notes found")
+    else println(categoryResults)
+}
+
+fun allTodo() = println(noteAPI.listAllTodo())
+
+fun allCompleted() = println(noteAPI.listAllCompleted())
+
+fun allInProgress() = println(noteAPI.listAllInProgress())
 
 fun updateNote() {
     //logger.info { "updateNotes() function invoked" }
@@ -209,7 +240,6 @@ fun load() {
         System.err.println("Error reading from file: $e")
     }
 }
-
 
 private val logger = KotlinLogging.logger {}
 
