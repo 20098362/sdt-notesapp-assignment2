@@ -4,11 +4,8 @@ import ie.setu.controllers.NoteAPI
 import ie.setu.models.Note
 import ie.setu.persistence.JSONSerializer
 import ie.setu.persistence.XMLSerializer
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
 import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -354,5 +351,41 @@ class NoteAPITest {
         }
     }
 
+    @Nested
+    inner class SearchMethods {
 
+        @Test
+        fun `search notes by title returns no notes when no notes with that title exist`() {
+            //Searching a populated collection for a title that doesn't exist.
+            Assertions.assertEquals(5, populatedNotes!!.numberOfNotes())
+            val searchResults = populatedNotes!!.searchByTitle("no results expected")
+            assertTrue(searchResults.isEmpty())
+
+            //Searching an empty collection
+            Assertions.assertEquals(0, emptyNotes!!.numberOfNotes())
+            assertTrue(emptyNotes!!.searchByTitle("").isEmpty())
+        }
+
+        @Test
+        fun `search notes by title returns notes when notes with that title exist`() {
+            Assertions.assertEquals(5, populatedNotes!!.numberOfNotes())
+
+            //Searching a populated collection for a full title that exists (case matches exactly)
+            var searchResults = populatedNotes!!.searchByTitle("Code App")
+            assertTrue(searchResults.contains("Code App"))
+            assertFalse(searchResults.contains("Test App"))
+
+            //Searching a populated collection for a partial title that exists (case matches exactly)
+            searchResults = populatedNotes!!.searchByTitle("App")
+            assertTrue(searchResults.contains("Code App"))
+            assertTrue(searchResults.contains("Test App"))
+            assertFalse(searchResults.contains("Swim - Pool"))
+
+            //Searching a populated collection for a partial title that exists (case doesn't match)
+            searchResults = populatedNotes!!.searchByTitle("aPp")
+            assertTrue(searchResults.contains("Code App"))
+            assertTrue(searchResults.contains("Test App"))
+            assertFalse(searchResults.contains("Swim - Pool"))
+        }
+    }
 }
