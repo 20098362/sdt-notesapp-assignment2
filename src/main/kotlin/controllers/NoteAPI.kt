@@ -2,6 +2,7 @@ package ie.setu.controllers
 
 import ie.setu.models.Note
 import ie.setu.persistence.Serializer
+import ie.setu.utils.Utilities.isValidListIndex
 
 class NoteAPI(serializerType: Serializer) {
 
@@ -64,8 +65,6 @@ class NoteAPI(serializerType: Serializer) {
     fun findNote(index: Int): Note? =
         if (isValidListIndex(index, notes)) notes[index]
         else null
-
-    fun isValidListIndex(index: Int, list: List<Any>): Boolean = (index >= 0 && index < list.size)
 
     fun isValidIndex(index: Int): Boolean = isValidListIndex(index, notes)
 
