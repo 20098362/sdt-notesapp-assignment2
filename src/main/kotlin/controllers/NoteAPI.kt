@@ -81,6 +81,28 @@ class NoteAPI(serializerType: Serializer) {
         return false
     }
 
+    fun setNoteTodo(indexTodo: Int): Boolean{
+        if(isValidIndex(indexTodo)){
+            val noteTodo = notes[indexTodo]
+            if(!noteTodo.isNoteTodo){
+                noteTodo.isNoteTodo = true
+                return true
+            }
+        }
+        return false
+    }
+
+    fun setNoteCompleted(indexComplete: Int): Boolean{
+        if(isValidIndex(indexComplete)){
+            val noteComplete = notes[indexComplete]
+            if(!noteComplete.isNoteCompleted){
+                noteComplete.isNoteCompleted = true
+                return true
+            }
+        }
+        return false
+    }
+
 
     private fun formatListString(notesToFormat : List<Note>) : String =
         notesToFormat
