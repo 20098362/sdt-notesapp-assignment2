@@ -4,6 +4,7 @@ import ie.setu.controllers.NoteAPI
 import ie.setu.models.Note
 import ie.setu.persistence.JSONSerializer
 import ie.setu.persistence.XMLSerializer
+import ie.setu.persistence.YAMLSerializer
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertTrue
 import java.io.File
@@ -386,6 +387,49 @@ class NoteAPITest {
             assertTrue(searchResults.contains("Code App"))
             assertTrue(searchResults.contains("Test App"))
             assertFalse(searchResults.contains("Swim - Pool"))
+        }
+    }
+
+    //Own test methods
+    @Nested
+    inner class YAMLPersistenceTests {
+
+        @Test
+        fun `saving and loading an empty collection in YAML doesn't crash app`() {
+            // Saving an empty notes.yaml file.
+            val storingNotes = NoteAPI(YAMLSerializer(File("notes.yaml")))
+            storingNotes.store()
+
+            //Loading the empty notes.yaml file into a new object
+            val loadedNotes = NoteAPI(YAMLSerializer(File("notes.yaml")))
+            loadedNotes.load()
+
+            //Comparing the source of the notes (storingNotes) with the YAML loaded notes (loadedNotes)
+            assertEquals(0, storingNotes.numberOfNotes())
+            assertEquals(0, loadedNotes.numberOfNotes())
+            assertEquals(storingNotes.numberOfNotes(), loadedNotes.numberOfNotes())
+        }
+
+        @Test
+        fun `saving and loading an loaded collection in YAML doesn't lose data`() {
+            // Storing 3 notes to the notes.yaml file.
+            val storingNotes = NoteAPI(YAMLSerializer(File("notes.yaml")))
+            storingNotes.create(testApp!!)
+            storingNotes.create(swim!!)
+            storingNotes.create(summerHoliday!!)
+            storingNotes.store()
+
+            //Loading notes.yaml into a different collection
+            val loadedNotes = NoteAPI(YAMLSerializer(File("notes.yaml")))
+            loadedNotes.load()
+
+            //Comparing the source of the notes (storingNotes) with the YAML loaded notes (loadedNotes)
+            assertEquals(3, storingNotes.numberOfNotes())
+            assertEquals(3, loadedNotes.numberOfNotes())
+            assertEquals(storingNotes.numberOfNotes(), loadedNotes.numberOfNotes())
+            assertEquals(storingNotes.findNote(0), loadedNotes.findNote(0))
+            assertEquals(storingNotes.findNote(1), loadedNotes.findNote(1))
+            assertEquals(storingNotes.findNote(2), loadedNotes.findNote(2))
         }
     }
 }
