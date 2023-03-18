@@ -25,9 +25,9 @@ class NoteAPITest {
 
     @BeforeEach
     fun setup(){
-        learnKotlin = Note("Learning Kotlin", 5, "College", false, false, false, "Learn Kotlin language")
+        learnKotlin = Note("Learning Kotlin", 5, "College Work", false, false, false, "Learn Kotlin language")
         summerHoliday = Note("Summer Holiday to France", 1, "Holiday", false, false, true, "Go on holiday")
-        codeApp = Note("Code App", 4, "Work", true, true, false, "Work on note app")
+        codeApp = Note("Code App", 4, "App Work", true, true, false, "Work on note app")
         testApp = Note("Test App", 4, "Work", false, true, false, "Test app works")
         swim = Note("Swim - Pool", 3, "Hobby", true, false, true, "Swimming")
 
@@ -477,6 +477,119 @@ class NoteAPITest {
             assertFalse(populatedNotes!!.findNote(0)!!.isNoteCompleted)
             assertTrue(populatedNotes!!.setNoteCompleted(0))
             assertTrue(populatedNotes!!.findNote(0)!!.isNoteCompleted)
+        }
+    }
+
+    @Nested
+    inner class OwnCounting{
+        @Test
+        fun numberOfTodoNotesCalculatedCorrectly() {
+            assertEquals(2, populatedNotes!!.numberOfTodo())
+            assertEquals(0, emptyNotes!!.numberOfTodo())
+        }
+
+        @Test
+        fun numberOfCompletedNotesCalculatedCorrectly() {
+            assertEquals(2, populatedNotes!!.numberOfCompleted())
+            assertEquals(0, emptyNotes!!.numberOfCompleted())
+        }
+
+        @Test
+        fun numberOfInProgressNotesCalculatedCorrectly() {
+            assertEquals(1, populatedNotes!!.numberOfInProgress())
+            assertEquals(0, emptyNotes!!.numberOfInProgress())
+        }
+    }
+
+    @Nested
+    inner class OwnListing{
+        @Test
+        fun `listAllTodo returns No Notes Stored message when ArrayList is empty`() {
+            assertEquals(0, emptyNotes!!.numberOfNotes())
+            assertTrue(emptyNotes!!.listAllTodo().lowercase().contains("no notes"))
+        }
+
+        @Test
+        fun `listAllTodo returns Notes when ArrayList has notes stored`() {
+            assertEquals(2, populatedNotes!!.numberOfTodo())
+            val notesString = populatedNotes!!.listAllTodo().lowercase()
+            assertFalse(notesString.contains("learning kotlin"))
+            assertTrue(notesString.contains("code app"))
+            assertFalse(notesString.contains("summer holiday"))
+            assertTrue(notesString.contains("test app"))
+            assertFalse(notesString.contains("swim"))
+        }
+
+        @Test
+        fun `listAllCompleted returns no active notes stored when ArrayList is empty`() {
+            assertEquals(0, emptyNotes!!.numberOfCompleted())
+            assertTrue(
+                emptyNotes!!.listAllCompleted().lowercase().contains("no notes")
+            )
+        }
+
+        @Test
+        fun `listAllCompleted returns active notes when ArrayList has active notes stored`() {
+            assertEquals(2, populatedNotes!!.numberOfCompleted())
+            val notesString = populatedNotes!!.listAllCompleted().lowercase()
+            assertFalse(notesString.contains("learning kotlin"))
+            assertFalse(notesString.contains("code app"))
+            assertTrue(notesString.contains("summer holiday"))
+            assertFalse(notesString.contains("test app"))
+            assertTrue(notesString.contains("swim"))
+        }
+
+        @Test
+        fun `listAllInProgress returns no active notes stored when ArrayList is empty`() {
+            assertEquals(0, emptyNotes!!.numberOfInProgress())
+            assertTrue(
+                emptyNotes!!.listAllInProgress().lowercase().contains("no notes")
+            )
+        }
+
+        @Test
+        fun `listAllInProgress returns active notes when ArrayList has active notes stored`() {
+            assertEquals(1, populatedNotes!!.numberOfInProgress())
+            val notesString = populatedNotes!!.listAllInProgress().lowercase()
+            assertFalse(notesString.contains("learning kotlin"))
+            assertFalse(notesString.contains("code app"))
+            assertFalse(notesString.contains("summer holiday"))
+            assertTrue(notesString.contains("test app"))
+            assertFalse(notesString.contains("swim"))
+        }
+
+        @Test
+        fun `search notes by category returns no notes when no notes with that category exist`() {
+            //Searching a populated collection for a category that doesn't exist.
+            Assertions.assertEquals(5, populatedNotes!!.numberOfNotes())
+            val searchResults = populatedNotes!!.searchByCategory("no results expected")
+            assertTrue(searchResults.isEmpty())
+
+            //Searching an empty collection
+            Assertions.assertEquals(0, emptyNotes!!.numberOfNotes())
+            assertTrue(emptyNotes!!.searchByCategory("").isEmpty())
+        }
+
+        @Test
+        fun `search notes by category returns notes when notes with that category exist`() {
+            Assertions.assertEquals(5, populatedNotes!!.numberOfNotes())
+
+            //Searching a populated collection for a full category that exists (case matches exactly)
+            var searchResults = populatedNotes!!.searchByCategory("College Work")
+            assertTrue(searchResults.contains("College Work"))
+            assertFalse(searchResults.contains("App Work"))
+
+            //Searching a populated collection for a partial category that exists (case matches exactly)
+            searchResults = populatedNotes!!.searchByCategory("Work")
+            assertTrue(searchResults.contains("Work"))
+            assertTrue(searchResults.contains("College Work"))
+            assertFalse(searchResults.contains("Swim - Pool"))
+
+            //Searching a populated collection for a partial category that exists (case doesn't match)
+            searchResults = populatedNotes!!.searchByCategory("wOrK")
+            assertTrue(searchResults.contains("Work"))
+            assertTrue(searchResults.contains("College Work"))
+            assertFalse(searchResults.contains("Swim - Pool"))
         }
     }
 }

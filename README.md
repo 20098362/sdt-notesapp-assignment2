@@ -12,10 +12,9 @@
 - List all active notes in the collection
 - List all archived notes in collection
 - List all notes via selected priority
-- List all notes that are to be completed
-- List all notes that have yet to be completed
-- List all notes that are to be worked on
-- List all notes that are not worked on
+- List all notes that are to be done
+- List all notes that have been completed
+- List all notes that are in progress
 - Automatic checking and validation via the utils package
 - Multiple persistence forms
 
