@@ -97,7 +97,7 @@ class NoteAPI(serializerType: Serializer) {
             }
 
     fun searchByTitle(searchString: String) =
-        formatListString(notes.filter { note -> note.noteTitle.contains(searchString, ignoreCase = true) })
+        formatListString(notes.filter { note -> note.noteTitle.contains(searchString, ignoreCase = true)})
 
 
     @Throws(Exception::class)
