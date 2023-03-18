@@ -64,13 +64,11 @@ fun createNote(){
     val noteTitle = readNextLine("Enter a title for the note: ")
     val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
     val noteCategory = readNextLine("Enter a category for the note: ")
-    val isAdded = noteAPI.create(Note(noteTitle, notePriority, noteCategory, false))
+    val noteContent = readNextLine("Enter the note's content: ")
+    val isAdded = noteAPI.create(Note(noteTitle, notePriority, noteCategory, false, false, false, noteContent))
 
-    if (isAdded) {
-        println("Created Successfully")
-    } else {
-        println("Create Failed")
-    }
+    if (isAdded) println("Created Successfully")
+    else println("Create Failed")
 }
 
 fun listNotes() {
@@ -104,19 +102,12 @@ fun searchNotes() {
         println(searchResults)
     }
 }
-fun listAllNotes() {
-    println(noteAPI.listAllNotes())
-}
+fun listAllNotes() = println(noteAPI.listAllNotes())
 
-fun listArchivedNotes() {
-    println(noteAPI.listArchivedNotes())
-}
+fun listArchivedNotes() = println(noteAPI.listArchivedNotes())
 
+fun listActiveNotes() = println(noteAPI.listActiveNotes())
 
-
-fun listActiveNotes() {
-    println(noteAPI.listActiveNotes())
-}
 
 fun archiveNote() {
     listActiveNotes()
@@ -130,12 +121,6 @@ fun archiveNote() {
             println("Archive NOT Successful")
         }
     }
-}
-
-
-
-fun listArchive(){
-    println(noteAPI.listArchivedNotes())
 }
 
 fun listByPriority(){
@@ -153,9 +138,10 @@ fun updateNote() {
             val noteTitle = readNextLine("Enter a title for the note: ")
             val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
             val noteCategory = readNextLine("Enter a category for the note: ")
+            val noteContent = readNextLine("Enter the note's content: ")
 
             //pass the index of the note and the new note details to NoteAPI for updating and check for success.
-            if (noteAPI.updateNote(indexToUpdate, Note(noteTitle, notePriority, noteCategory, false))){
+            if (noteAPI.updateNote(indexToUpdate, Note(noteTitle, notePriority, noteCategory, false, false, false, noteContent))){
                 println("Update Successful")
             } else {
                 println("Update Failed")

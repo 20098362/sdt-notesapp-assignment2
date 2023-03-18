@@ -9,15 +9,12 @@ class NoteAPI(serializerType: Serializer) {
 
     private var notes = ArrayList<Note>()
 
-    fun create(note: Note): Boolean {
-        return notes.add(note)
-    }
+    fun create(note: Note): Boolean = notes.add(note)
 
-    fun deleteNote(indexToDelete: Int): Note? {
-        return if (isValidListIndex(indexToDelete, notes)) {
-            notes.removeAt(indexToDelete)
-        } else null
-    }
+
+    fun deleteNote(indexToDelete: Int): Note? =
+        if (isValidListIndex(indexToDelete, notes)) notes.removeAt(indexToDelete)
+        else null
 
     fun updateNote(indexToUpdate: Int, note: Note?): Boolean {
         //find the note object by the index number
@@ -28,6 +25,7 @@ class NoteAPI(serializerType: Serializer) {
             foundNote.noteTitle = note.noteTitle
             foundNote.notePriority = note.notePriority
             foundNote.noteCategory = note.noteCategory
+            foundNote.noteContents = note.noteContents
             return true
         }
 
@@ -64,19 +62,13 @@ class NoteAPI(serializerType: Serializer) {
 
     fun numberOfActiveNotes(): Int = notes.count{note: Note -> !note.isNoteArchived}
 
-    fun findNote(index: Int): Note? {
-        return if (isValidListIndex(index, notes)) {
-            notes[index]
-        } else null
-    }
+    fun findNote(index: Int): Note? =
+        if (isValidListIndex(index, notes)) notes[index]
+        else null
 
-    fun isValidListIndex(index: Int, list: List<Any>): Boolean {
-        return (index >= 0 && index < list.size)
-    }
+    fun isValidListIndex(index: Int, list: List<Any>): Boolean = (index >= 0 && index < list.size)
 
-    fun isValidIndex(index: Int): Boolean {
-        return isValidListIndex(index, notes);
-    }
+    fun isValidIndex(index: Int): Boolean = isValidListIndex(index, notes)
 
     fun archiveNote(indexToArchive: Int): Boolean {
         if (isValidIndex(indexToArchive)) {
@@ -88,6 +80,7 @@ class NoteAPI(serializerType: Serializer) {
         }
         return false
     }
+
 
     private fun formatListString(notesToFormat : List<Note>) : String =
         notesToFormat
@@ -107,7 +100,5 @@ class NoteAPI(serializerType: Serializer) {
     }
 
     @Throws(Exception::class)
-    fun store() {
-        serializer.write(notes)
-    }
+    fun store() = serializer.write(notes)
 }
