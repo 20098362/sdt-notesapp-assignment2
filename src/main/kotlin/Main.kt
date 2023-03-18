@@ -28,7 +28,9 @@ fun mainMenu() : Int {
          > |   3) Update a note                |
          > |   4) Delete a note                |
          > |   5) Archive a note               |
-         > |   6) Search note(by title)  |
+         > |   6) Search note(by title)        |
+         > |   7) Set note as Todo             |
+         > |   8) Set note as complete         |
          > -------------------------------------
          > |   20) Save notes                  |
          > |   21) Load notes                  |
@@ -48,6 +50,8 @@ fun runMenu() {
             4  -> deleteNote()
             5 -> archiveNote()
             6 -> searchNotes()
+            7 -> todoNote()
+            8 -> completeNote()
             20  -> save()
             21  -> load()
             0  -> exitApp()
@@ -56,21 +60,17 @@ fun runMenu() {
     } while (true)
 }
 
-
-
 fun createNote(){
     logger.info { "createNote() function invoked" }
 
     val noteTitle = readNextLine("Enter a title for the note: ")
     val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
     val noteCategory = readNextLine("Enter a category for the note: ")
-    val isAdded = noteAPI.create(Note(noteTitle, notePriority, noteCategory, false))
+    val noteContent = readNextLine("Enter the note's content: ")
+    val isAdded = noteAPI.create(Note(noteTitle, notePriority, noteCategory, false, false, false, noteContent))
 
-    if (isAdded) {
-        println("Created Successfully")
-    } else {
-        println("Create Failed")
-    }
+    if (isAdded) println("Created Successfully")
+    else println("Create Failed")
 }
 
 fun listNotes() {
@@ -81,6 +81,7 @@ fun listNotes() {
                   > |   1) View ALL notes          |
                   > |   2) View ACTIVE notes       |
                   > |   3) View ARCHIVED notes     |
+                  > |   4) View note by priority   |
                   > --------------------------------
          > ==>> """.trimMargin(">"))
 
@@ -88,6 +89,7 @@ fun listNotes() {
             1 -> listAllNotes()
             2 -> listActiveNotes()
             3 -> listArchivedNotes()
+            4 -> listByPriority()
             else -> println("Invalid option entered: $option")
         }
     } else {
@@ -96,7 +98,7 @@ fun listNotes() {
 }
 
 fun searchNotes() {
-    val searchTitle = readNextLine("Enter the description to search by: ")
+    val searchTitle = readNextLine("Enter the note title to search by: ")
     val searchResults = noteAPI.searchByTitle(searchTitle)
     if (searchResults.isEmpty()) {
         println("No notes found")
@@ -104,19 +106,12 @@ fun searchNotes() {
         println(searchResults)
     }
 }
-fun listAllNotes() {
-    println(noteAPI.listAllNotes())
-}
+fun listAllNotes() = println(noteAPI.listAllNotes())
 
-fun listArchivedNotes() {
-    println(noteAPI.listArchivedNotes())
-}
+fun listArchivedNotes() = println(noteAPI.listArchivedNotes())
 
+fun listActiveNotes() = println(noteAPI.listActiveNotes())
 
-
-fun listActiveNotes() {
-    println(noteAPI.listActiveNotes())
-}
 
 fun archiveNote() {
     listActiveNotes()
@@ -124,18 +119,27 @@ fun archiveNote() {
         //only ask the user to choose the note to archive if active notes exist
         val indexToArchive = readNextInt("Enter the index of the note to archive: ")
         //pass the index of the note to NoteAPI for archiving and check for success.
-        if (noteAPI.archiveNote(indexToArchive)) {
-            println("Archive Successful!")
-        } else {
-            println("Archive NOT Successful")
-        }
+        if (noteAPI.archiveNote(indexToArchive)) println("Archive Successful!")
+        else println("Archive NOT Successful")
     }
 }
 
+fun todoNote(){
+    listActiveNotes()
+    if(noteAPI.numberOfActiveNotes() > 0){
+        val indexTodo = readNextInt("Enter the index of the note you wish to set as todo: ")
+        if(noteAPI.setNoteTodo(indexTodo)) println("Note set as Todo")
+        else println("Set as Todo failed")
+    }
+}
 
-
-fun listArchive(){
-    println(noteAPI.listArchivedNotes())
+fun completeNote(){
+    listActiveNotes()
+    if(noteAPI.numberOfActiveNotes() > 0){
+        val indexComplete = readNextInt("Enter the index of the note you wish to set as complete: ")
+        if(noteAPI.setNoteCompleted(indexComplete)) println("Note set as completed")
+        else println("Set as completed failed")
+    }
 }
 
 fun listByPriority(){
@@ -153,9 +157,10 @@ fun updateNote() {
             val noteTitle = readNextLine("Enter a title for the note: ")
             val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
             val noteCategory = readNextLine("Enter a category for the note: ")
+            val noteContent = readNextLine("Enter the note's content: ")
 
             //pass the index of the note and the new note details to NoteAPI for updating and check for success.
-            if (noteAPI.updateNote(indexToUpdate, Note(noteTitle, notePriority, noteCategory, false))){
+            if (noteAPI.updateNote(indexToUpdate, Note(noteTitle, notePriority, noteCategory, false, false, false, noteContent))){
                 println("Update Successful")
             } else {
                 println("Update Failed")
