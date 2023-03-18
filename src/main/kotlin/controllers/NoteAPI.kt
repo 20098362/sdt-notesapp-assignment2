@@ -37,17 +37,16 @@ class NoteAPI(serializerType: Serializer) {
 
     fun listAllNotes(): String =
         if  (notes.isEmpty()) "No notes stored"
-        else notes.joinToString (separator = "\n") { note ->
-            notes.indexOf(note).toString() + ": " + note.toString() }
+        else formatListString(notes)
 
 
     fun listActiveNotes(): String =
-        if (numberOfActiveNotes() == 0) "No active notes stored"
-        else formatListString(notes.filter{ note -> !note.isNoteArchived })
+        if  (numberOfActiveNotes() == 0)  "No active notes stored"
+        else formatListString(notes.filter { note -> !note.isNoteArchived})
 
     fun listArchivedNotes(): String =
-        if (numberOfArchivedNotes() == 0) "No archived notes stored"
-        else formatListString(notes.filter{ note -> note.isNoteArchived })
+        if  (numberOfArchivedNotes() == 0) "No archived notes stored"
+        else formatListString(notes.filter { note -> note.isNoteArchived})
 
     fun listNotesBySelectedPriority(priority: Int): String =
         if (notes.isEmpty()) "No notes stored"
@@ -90,14 +89,16 @@ class NoteAPI(serializerType: Serializer) {
         return false
     }
 
-    private fun formatListString(notesToFormat: List<Note>): String =
+    private fun formatListString(notesToFormat : List<Note>) : String =
         notesToFormat
-            .joinToString(separator = "\n") { note ->
-                notes.indexOf(note).toString() + ": " + note.toString()
-            }
+            .joinToString (separator = "\n") { note ->
+                notes.indexOf(note).toString() + ": " + note.toString() }
 
-    fun searchByTitle(searchString: String) =
-        formatListString(notes.filter { note -> note.noteTitle.contains(searchString, ignoreCase = true) })
+
+    fun searchByTitle (searchString : String) =
+        formatListString(
+            notes.filter { note -> note.noteTitle.contains(searchString, ignoreCase = true) })
+
 
 
     @Throws(Exception::class)
