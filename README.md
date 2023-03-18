@@ -1,19 +1,29 @@
-# ***Software Development Tooling Assignment 2 (SETU 2023)***
+# ***Software Development Tooling Assignment 2 NotesApp(SETU 2023)***
 
-This application uses a menu to interact with the user and persistence to save their notes to an XML file
+## **Author: Troy Barrett 20098362**
 
-Current features:
+## This application uses a menu to interact with the user and persistence to save their notes to an external file
+
+### Current features:
 - Create note via user input
+- Delete note via user input
+- Update note via user input
 - List all notes in the collection
 - List all active notes in the collection
-- List all archive notes in collection
-- List all notes via their priority
+- List all archived notes in collection
+- List all notes via selected priority
+- List all notes that are to be completed
+- List all notes that have yet to be completed
+- List all notes that are to be worked on
+- List all notes that are not worked on
+- Automatic checking and validation via the utils package
+- Multiple persistence forms
 
 *All features added are automatically tested using JUnit5*
 
 ### **Versions**
 
-**App Version: V3.0**
+**App Version: V5.0**
 
 **IntelliJ IDEA Community 2022.2.2**
 
@@ -22,5 +32,3 @@ Current features:
 **Gradle Kotlin**
 
 **VCS: Github**
-
-**Author: Troy Barrett**

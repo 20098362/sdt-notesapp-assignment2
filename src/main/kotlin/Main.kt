@@ -4,21 +4,21 @@ import ie.setu.controllers.NoteAPI
 import ie.setu.models.Note
 import ie.setu.persistence.JSONSerializer
 import ie.setu.persistence.XMLSerializer
+import ie.setu.persistence.YAMLSerializer
 import mu.KotlinLogging
-import utils.ScannerInput
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
 import java.io.File
-import java.lang.System.exit
 import kotlin.system.exitProcess
 
-private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
+//private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
 //private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
+private val noteAPI = NoteAPI(YAMLSerializer(File("notes.yaml")))
 
 
 
 fun mainMenu() : Int {
-    return ScannerInput.readNextInt(""" 
+    return readNextInt(""" 
          > -------------------------------------
          > |          NOTE KEEPER APP          |
          > -------------------------------------
@@ -51,7 +51,7 @@ fun runMenu() {
             20  -> save()
             21  -> load()
             0  -> exitApp()
-            else -> println("Invalid option entered: ${option}")
+            else -> println("Invalid option entered: $option")
         }
     } while (true)
 }
@@ -85,13 +85,13 @@ fun listNotes() {
          > ==>> """.trimMargin(">"))
 
         when (option) {
-            1 -> listAllNotes();
-            2 -> listActiveNotes();
-            3 -> listArchivedNotes();
-            else -> println("Invalid option entered: " + option);
+            1 -> listAllNotes()
+            2 -> listActiveNotes()
+            3 -> listArchivedNotes()
+            else -> println("Invalid option entered: $option")
         }
     } else {
-        println("Option Invalid - No notes stored");
+        println("Option Invalid - No notes stored")
     }
 }
 
@@ -139,7 +139,7 @@ fun listArchive(){
 }
 
 fun listByPriority(){
-    val priorityNum = ScannerInput.readNextInt("Please enter the note priority you wish to search by: ")
+    val priorityNum = readNextInt("Please enter the note priority you wish to search by: ")
     println(noteAPI.listNotesBySelectedPriority(priorityNum))
 }
 
