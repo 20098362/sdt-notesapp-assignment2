@@ -25,11 +25,11 @@ class NoteAPITest {
 
     @BeforeEach
     fun setup(){
-        learnKotlin = Note("Learning Kotlin", 5, "College", false)
-        summerHoliday = Note("Summer Holiday to France", 1, "Holiday", false)
-        codeApp = Note("Code App", 4, "Work", true)
-        testApp = Note("Test App", 4, "Work", false)
-        swim = Note("Swim - Pool", 3, "Hobby", true)
+        learnKotlin = Note("Learning Kotlin", 5, "College", false, false, false, "Learn Kotlin language")
+        summerHoliday = Note("Summer Holiday to France", 1, "Holiday", false, false, true, "Go on holiday")
+        codeApp = Note("Code App", 4, "Work", true, true, false, "Work on note app")
+        testApp = Note("Test App", 4, "Work", false, true, false, "Test app works")
+        swim = Note("Swim - Pool", 3, "Hobby", true, false, true, "Swimming")
 
         //adding 5 Note to the notes api
         populatedNotes!!.create(learnKotlin!!)
@@ -54,7 +54,7 @@ class NoteAPITest {
     inner class AddNotes {
         @Test
         fun `adding a Note to a populated list adds to ArrayList`() {
-            val newNote = Note("Study Lambdas", 1, "College", false)
+            val newNote = Note("Study Lambdas", 1, "College", false, false, false, "")
             assertEquals(5, populatedNotes!!.numberOfNotes())
             assertTrue(populatedNotes!!.create(newNote))
             assertEquals(6, populatedNotes!!.numberOfNotes())
@@ -63,7 +63,7 @@ class NoteAPITest {
 
         @Test
         fun `adding a Note to an empty list adds to ArrayList`() {
-            val newNote = Note("Study Lambdas", 1, "College", false)
+            val newNote = Note("Study Lambdas", 1, "College", false, false, false, "")
             assertEquals(0, emptyNotes!!.numberOfNotes())
             assertTrue(emptyNotes!!.create(newNote))
             assertEquals(1, emptyNotes!!.numberOfNotes())
@@ -170,7 +170,6 @@ class NoteAPITest {
         }
     }
 
-
     @Nested
     inner class DeleteNotes {
 
@@ -195,9 +194,9 @@ class NoteAPITest {
     inner class UpdateNotes {
         @Test
         fun `updating a note that does not exist returns false`(){
-            assertFalse(populatedNotes!!.updateNote(6, Note("Updating Note", 2, "Work", false)))
-            assertFalse(populatedNotes!!.updateNote(-1, Note("Updating Note", 2, "Work", false)))
-            assertFalse(emptyNotes!!.updateNote(0, Note("Updating Note", 2, "Work", false)))
+            assertFalse(populatedNotes!!.updateNote(6, Note("Updating Note", 2, "Work", false, false, false, "")))
+            assertFalse(populatedNotes!!.updateNote(-1, Note("Updating Note", 2, "Work", false, false, false, "")))
+            assertFalse(emptyNotes!!.updateNote(0, Note("Updating Note", 2, "Work", false, false, false, "")))
         }
 
         @Test
@@ -207,12 +206,14 @@ class NoteAPITest {
             assertEquals("Swim - Pool", populatedNotes!!.findNote(4)!!.noteTitle)
             assertEquals(3, populatedNotes!!.findNote(4)!!.notePriority)
             assertEquals("Hobby", populatedNotes!!.findNote(4)!!.noteCategory)
+            assertEquals("Swimming", populatedNotes!!.findNote(4)!!.noteContents)
 
             //update note 5 with new information and ensure contents updated successfully
-            assertTrue(populatedNotes!!.updateNote(4, Note("Updating Note", 2, "College", false)))
+            assertTrue(populatedNotes!!.updateNote(4, Note("Updating Note", 2, "College", false, false, false, "Contents")))
             assertEquals("Updating Note", populatedNotes!!.findNote(4)!!.noteTitle)
             assertEquals(2, populatedNotes!!.findNote(4)!!.notePriority)
             assertEquals("College", populatedNotes!!.findNote(4)!!.noteCategory)
+            assertEquals("Contents", populatedNotes!!.findNote(4)!!.noteContents)
         }
     }
 
@@ -430,6 +431,52 @@ class NoteAPITest {
             assertEquals(storingNotes.findNote(0), loadedNotes.findNote(0))
             assertEquals(storingNotes.findNote(1), loadedNotes.findNote(1))
             assertEquals(storingNotes.findNote(2), loadedNotes.findNote(2))
+        }
+    }
+
+    @Nested
+    inner class TodoNotes {
+        @Test
+        fun `set as todo on a note that does not exist returns false`(){
+            assertFalse(populatedNotes!!.setNoteTodo(6))
+            assertFalse(populatedNotes!!.setNoteTodo(-1))
+            assertFalse(emptyNotes!!.setNoteTodo(0))
+        }
+
+        @Test
+        fun `set as todo an already todo note returns false`(){
+            assertTrue(populatedNotes!!.findNote(3)!!.isNoteTodo)
+            assertFalse(populatedNotes!!.setNoteTodo(3))
+        }
+
+        @Test
+        fun `set note as todo that exists returns true and isn't already todo`() {
+            assertFalse(populatedNotes!!.findNote(0)!!.isNoteTodo)
+            assertTrue(populatedNotes!!.setNoteTodo(0))
+            assertTrue(populatedNotes!!.findNote(0)!!.isNoteTodo)
+        }
+    }
+
+    @Nested
+    inner class CompleteNotes {
+        @Test
+        fun `completing a note that does not exist returns false`(){
+            assertFalse(populatedNotes!!.setNoteCompleted(6))
+            assertFalse(populatedNotes!!.setNoteCompleted(-1))
+            assertFalse(emptyNotes!!.setNoteCompleted(0))
+        }
+
+        @Test
+        fun `completing an already completed note returns false`(){
+            assertTrue(populatedNotes!!.findNote(4)!!.isNoteCompleted)
+            assertFalse(populatedNotes!!.setNoteCompleted(4))
+        }
+
+        @Test
+        fun `completing a uncompleted note that exists returns true and archives`() {
+            assertFalse(populatedNotes!!.findNote(0)!!.isNoteCompleted)
+            assertTrue(populatedNotes!!.setNoteCompleted(0))
+            assertTrue(populatedNotes!!.findNote(0)!!.isNoteCompleted)
         }
     }
 }
