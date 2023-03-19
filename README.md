@@ -18,6 +18,15 @@
 - Automatic checking and validation via the utils package
 - Multiple persistence forms
 
+### Main menu
+![mainmenu](https://user-images.githubusercontent.com/97962691/226147799-80ebc196-c4dc-47cb-bed1-80f7c700cb93.PNG)
+
+
+### Submenu list
+![sub](https://user-images.githubusercontent.com/97962691/226147806-890d5875-8b37-4146-b338-3fe73b3484c2.PNG)
+
+
+
 *All features added are automatically tested using JUnit5*
 
 ### **Versions**
