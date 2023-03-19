@@ -5,6 +5,8 @@ import ie.setu.models.Note
 import ie.setu.persistence.JSONSerializer
 import ie.setu.persistence.XMLSerializer
 import ie.setu.persistence.YAMLSerializer
+import ie.setu.utils.ValidateInput.readValidCategory
+import ie.setu.utils.ValidateInput.readValidPriority
 import mu.KotlinLogging
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
@@ -72,8 +74,9 @@ fun createNote(){
     logger.info { "createNote() function invoked" }
 
     val noteTitle = readNextLine("Enter a title for the note: ")
-    val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
-    val noteCategory = readNextLine("Enter a category for the note: ")
+    val notePriority = readValidPriority("Enter a priority (1-low, 2, 3, 4, 5-high): ")
+    println("College Work, Work, Hobby, Holiday, App Work, Misc")
+    val noteCategory = readValidCategory("Enter a category for the note: ")
     val noteContent = readNextLine("Enter the note's content: ")
     val isAdded = noteAPI.create(Note(noteTitle, notePriority, noteCategory, false, false, false, noteContent))
 
@@ -161,12 +164,13 @@ fun completeNote(){
 }
 
 fun listByPriority(){
-    val priorityNum = readNextInt("Please enter the note priority you wish to search by: ")
+    val priorityNum = readValidPriority("Please enter the note priority you wish to search by: ")
     println(noteAPI.listNotesBySelectedPriority(priorityNum))
 }
 
 fun searchByCategory(){
-    val searchCategory = readNextLine("Enter the note category you wish to search by: ")
+    println("College Work, Work, Hobby, Holiday, App Work, Misc")
+    val searchCategory = readValidCategory("Enter the note category you wish to search by: ")
     val categoryResults = noteAPI.searchByCategory(searchCategory)
     if(categoryResults.isEmpty()) println("No notes found")
     else println(categoryResults)
@@ -186,12 +190,29 @@ fun updateNote() {
         val indexToUpdate = readNextInt("Enter the index of the note to update: ")
         if (noteAPI.isValidIndex(indexToUpdate)) {
             val noteTitle = readNextLine("Enter a title for the note: ")
-            val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
-            val noteCategory = readNextLine("Enter a category for the note: ")
+            val notePriority = readValidPriority("Enter a priority (1-low, 2, 3, 4, 5-high): ")
+            println("College Work, Work, Hobby, Holiday, App Work, Misc")
+            val noteCategory = readValidCategory("Enter a category for the note: ")
             val noteContent = readNextLine("Enter the note's content: ")
+            val archiveNote = readNextInt("Archive note? 1=Yes/0=No")
+            var localArchive = false
+            if(archiveNote == 1){
+                localArchive = true
+            }
+            val todoNote = readNextInt("Set as Todo? 1=Yes/0=No")
+            var localTodo = false
+            if(todoNote == 1){
+                localTodo = true
+            }
+            val completeNote = readNextInt("Complete note? 1=Yes/0=No")
+            var localComplete = false
+            if(completeNote == 1){
+                localComplete = true
+            }
+
 
             //pass the index of the note and the new note details to NoteAPI for updating and check for success.
-            if (noteAPI.updateNote(indexToUpdate, Note(noteTitle, notePriority, noteCategory, false, false, false, noteContent))){
+            if (noteAPI.updateNote(indexToUpdate, Note(noteTitle, notePriority, noteCategory, localArchive, localTodo, localComplete, noteContent))){
                 println("Update Successful")
             } else {
                 println("Update Failed")
@@ -218,7 +239,6 @@ fun deleteNote(){
         }
     }
 }
-
 
 fun exitApp(){
     println("Closing app")
