@@ -2,7 +2,12 @@ package ie.setu.controllers
 
 import ie.setu.models.Note
 import ie.setu.persistence.Serializer
+import ie.setu.utils.Utilities.isValidListIndex
 
+/**
+ * This class is responsible for calculating and interacting with the notes collection and provides booleans and string
+ * return methods so that they may be printed out in the Main.kt file as a part of the Note App system
+ */
 class NoteAPI(serializerType: Serializer) {
 
     private var serializer: Serializer = serializerType
@@ -64,8 +69,6 @@ class NoteAPI(serializerType: Serializer) {
     fun findNote(index: Int): Note? =
         if (isValidListIndex(index, notes)) notes[index]
         else null
-
-    fun isValidListIndex(index: Int, list: List<Any>): Boolean = (index >= 0 && index < list.size)
 
     fun isValidIndex(index: Int): Boolean = isValidListIndex(index, notes)
 

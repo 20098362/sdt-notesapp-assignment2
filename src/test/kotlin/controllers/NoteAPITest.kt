@@ -12,6 +12,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 
+/**
+ * This NoteAPITest class is responsible for validating the methods used by the user when interacting with the Notes App
+ */
 class NoteAPITest {
 
     private var learnKotlin: Note? = null
