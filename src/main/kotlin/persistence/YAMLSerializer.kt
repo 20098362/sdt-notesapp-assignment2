@@ -7,6 +7,10 @@ import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
+/**
+ * This is a YAML serialiser class
+ * Using the StaxDrive() and JSON/XML serialiser template, the system can save the note objects to an external .yaml file
+ */
 class YAMLSerializer(private val file: File) : Serializer {
     @Throws(Exception::class)
     override fun read(): Any {

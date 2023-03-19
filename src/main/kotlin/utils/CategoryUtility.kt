@@ -1,5 +1,8 @@
 package ie.setu.utils
 
+/**
+ * This utils object is responsible for handling the category validation
+ */
 object CategoryUtility {
 
     @JvmStatic

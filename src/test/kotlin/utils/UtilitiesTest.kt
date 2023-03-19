@@ -4,7 +4,9 @@ import ie.setu.utils.Utilities.validRange
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-
+/**
+ * This UtilitiesTest class is responsible for validating that the priority range numbers are accurate to system specifications
+ */
 class UtilitiesTest {
 
     @Test

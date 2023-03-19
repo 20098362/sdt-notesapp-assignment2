@@ -3,6 +3,9 @@ package ie.setu.utils
 import utils.ScannerInput
 import java.util.*
 
+/**
+ * This utils object is responsible for validating the category and priority inputs made by the user
+ */
 object ValidateInput {
 
     @JvmStatic

@@ -1,5 +1,8 @@
 package ie.setu.utils
 
+/**
+ * This utils object is responsible for providing the template methods used in other utils objects responsible for input validation
+ */
 object Utilities {
 
     //NOTE: JvmStatic annotation means that the methods are static (i.e. we can call them over the class

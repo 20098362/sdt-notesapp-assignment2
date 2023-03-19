@@ -13,6 +13,10 @@ import utils.ScannerInput.readNextLine
 import java.io.File
 import kotlin.system.exitProcess
 
+/**
+ * The commented out values below are how you swap between persistence types
+ */
+
 //private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
 //private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
 private val noteAPI = NoteAPI(YAMLSerializer(File("notes.yaml")))
@@ -24,6 +28,9 @@ const val ansiYellow = "\u001B[33m"
 const val ansiBlue = "\u001B[34m"
 const val ansiCyan = "\u001B[36m"
 
+/**
+ * The methods below are responsible for interacting with the user and printing the relevant data to the screen
+ */
 fun mainMenu() : Int {
     return readNextInt(""" 
          > $ansiCyan--------------------------------------------$ansiReset

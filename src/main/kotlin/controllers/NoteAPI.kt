@@ -4,6 +4,10 @@ import ie.setu.models.Note
 import ie.setu.persistence.Serializer
 import ie.setu.utils.Utilities.isValidListIndex
 
+/**
+ * This class is responsible for calculating and interacting with the notes collection and provides booleans and string
+ * return methods so that they may be printed out in the Main.kt file as a part of the Note App system
+ */
 class NoteAPI(serializerType: Serializer) {
 
     private var serializer: Serializer = serializerType
