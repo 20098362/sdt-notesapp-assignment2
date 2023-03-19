@@ -3,7 +3,7 @@ package ie.setu.utils
 object CategoryUtility {
 
     @JvmStatic
-    val categories = setOf ("College Work", "Work", "Hobby", "Holiday", "App Work", "Misc")  //add more categories in here.
+    val categories = setOf ("College Work", "Work", "Hobby", "Holiday", "App Work", "Misc")
 
     @JvmStatic
     fun isValidCategory(categoryToCheck: String?): Boolean {
